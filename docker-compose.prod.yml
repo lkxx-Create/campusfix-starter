@@ -1,0 +1,24 @@
+# 生产用 compose：只拉镜像，不在服务器上构建（课21）
+# 用法：docker compose -f docker-compose.prod.yml up -d
+services:
+  app:
+    image: ghcr.io/lkxx-create/campusfix-starter:latest
+    container_name: campusfix-app
+    ports:
+      # 只绑本机：Docker 发布端口会绕过 UFW，对外统一走 Nginx(80)
+      - "127.0.0.1:5000:5000"
+    environment:
+      FLASK_DEBUG: "0"
+    volumes:
+      # 与本地 compose 同名卷，数据不因换部署方式而丢
+      - campusfix-data:/app/instance
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  campusfix-data:
