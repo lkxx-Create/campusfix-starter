@@ -4,7 +4,9 @@ services:
     image: campusfix:latest
     container_name: campusfix-app
     ports:
-      - "5000:5000"
+      # 只绑本机：Docker 发布端口会绕过 UFW，写 0.0.0.0 等于把 5000 暴露到公网
+      # 对外统一走 Nginx(80) → 127.0.0.1:5000
+      - "127.0.0.1:5000:5000"
     environment:
       # 生产模式：关掉 Flask 调试与自动重载
       FLASK_DEBUG: "0"
