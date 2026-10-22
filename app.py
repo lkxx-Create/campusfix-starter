@@ -93,3 +93,6 @@ def create_ticket():
 if __name__ == "__main__":
     # 仅开发用途；生产部署使用 gunicorn（第11次课）
     app.run(host="127.0.0.1", port=5000, debug=True)
+
+# 期末考查标识：CampusFix-20252043
+
